@@ -20,7 +20,6 @@
     "rules": {
       "no-console" :"off",
       "import/extensions": "off",
-      "import/no-unresolved": "off",
-      "no-underscore-dangle": "off"
+      "import/no-unresolved": "off"
     }
 }

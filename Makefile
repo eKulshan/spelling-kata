@@ -2,7 +2,7 @@ install:
 	npm install
 
 start: 
-	npx nodemon build/server/bin/server.js
+	npx nodemon build/bin/server.js
 
 lint:
 	npx eslint .

@@ -1,7 +1,7 @@
-import { FastifyInstance } from 'fastify';
-import fixSpelling from '../lib/fixSpelling';
+Object.defineProperty(exports, '__esModule', { value: true });
+const fixSpelling_1 = require('../lib/fixSpelling');
 
-export default (app: FastifyInstance) => {
+exports.default = (app) => {
   app
     .get('/', (_request, reply) => {
       reply.send('spelling-kata');
@@ -10,11 +10,9 @@ export default (app: FastifyInstance) => {
       try {
         const data = await request.file();
         const reqBuffer = await data.toBuffer();
-
         const text = reqBuffer.toString();
-        const fixedText = await fixSpelling(text);
+        const fixedText = await fixSpelling_1.default(text);
         const resBuffer = Buffer.from(fixedText, 'utf-8');
-
         return reply
           .headers({
             'Content-Disposition': `attachment; filename=${data.filename}`,

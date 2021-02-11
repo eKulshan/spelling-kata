@@ -1,12 +1,6 @@
 import fastify from 'fastify';
 import fastifyMultipart from 'fastify-multipart';
-import fastifyStatic from 'fastify-static';
-import { fileURLToPath } from 'url';
-import path from 'path';
-import addRoutes from './routes/index.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import addRoutes from './routes/index';
 
 export default () => {
   const app = fastify({
@@ -14,10 +8,13 @@ export default () => {
       prettyPrint: true,
     },
   });
-  app.register(fastifyStatic, {
-    root: path.join(__dirname, 'public'),
+  app.register(fastifyMultipart, {
+    throwFileSizeLimit: true,
+    limits: {
+      files: 1,
+      fileSize: 10000,
+    },
   });
-  app.register(fastifyMultipart);
   addRoutes(app);
 
   return app;
