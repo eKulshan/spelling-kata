@@ -16,31 +16,26 @@ describe('requests', () => {
   });
 
   it('get fixed text', async () => {
-    try {
-      const form = formAutoContent({
-        myFile: fs.createReadStream(path.resolve(process.cwd(), '__fixtures__/text.txt')),
-      });
-      const expectedHeaders = {
-        'content-disposition': 'attachment; filename=text.txt',
-        'content-type': 'text/plain',
-        'content-length': '777',
-      };
-      const expectedResult = await fsp.readFile(path.resolve(process.cwd(), '__fixtures__/fixedText.txt'), 'utf-8');
+    const form = formAutoContent({
+      myFile: fs.createReadStream(path.resolve(process.cwd(), '__fixtures__/text.txt')),
+    });
+    const expectedHeaders = {
+      'content-disposition': 'attachment; filename=text.txt',
+      'content-type': 'text/plain',
+    };
+    const expectedResult = await fsp.readFile(path.resolve(process.cwd(), '__fixtures__/fixedText.txt'), 'utf-8');
 
-      const res = await app.inject({
-        method: 'POST',
-        url: 'http://localhost:5000/spell/fix',
-        headers: {
-          'content-type': 'multipart/form-data',
-        },
-        ...form,
-      });
-      expect(res.statusCode).toBe(200);
-      expect(res.headers).toMatchObject(expectedHeaders);
-      expect(res.body).toBe(expectedResult);
-    } catch (error) {
-      console.log(error);
-    }
+    const res = await app.inject({
+      method: 'POST',
+      url: 'http://localhost:5000/spell/fix',
+      headers: {
+        'content-type': 'multipart/form-data',
+      },
+      ...form,
+    });
+    expect(res.statusCode).toBe(200);
+    expect(res.headers).toMatchObject(expectedHeaders);
+    expect(res.body).toBe(expectedResult);
   });
 
   afterAll(() => {

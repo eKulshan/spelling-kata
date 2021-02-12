@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import { checkText } from 'yandex-speller';
 
 interface checkResultItem {
@@ -10,13 +11,26 @@ interface checkResultSchema {
 }
 
 const fixTypos = (text: string, checkResult: checkResultSchema) => {
-  const words = text.split(' ');
+  const isCapitalized = (str: string): boolean => str === _.capitalize(str);
+  const words = _.words(text);
   // @ts-ignore
-  checkResult.forEach(({ s: suggestion, word }: { s: string, word: string }) => {
-    const index = words.indexOf(word);
+  checkResult.forEach(({ s: suggestion, word }) => {
+    const index = _.indexOf(words, word);
     words.splice(index, 1, suggestion[0]);
   });
-  return words.join(' ');
+  let fixedText = '';
+  words.forEach((word, index) => {
+    if (index === 0) {
+      fixedText += `${word}`;
+      return;
+    }
+    if (isCapitalized(word)) {
+      fixedText += `. ${word}`;
+      return;
+    }
+    fixedText += ` ${word}`;
+  });
+  return fixedText;
 };
 
 export default async (text: string) => {
