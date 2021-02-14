@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import { checkText } from 'yandex-speller';
 
 interface checkResultItem {
@@ -11,26 +10,16 @@ interface checkResultSchema {
 }
 
 const fixTypos = (text: string, checkResult: checkResultSchema) => {
-  const isCapitalized = (str: string): boolean => str === _.capitalize(str);
-  const words = _.words(text);
+  const fixedText = [];
+  let i = 0;
   // @ts-ignore
-  checkResult.forEach(({ s: suggestion, word }) => {
-    const index = _.indexOf(words, word);
-    words.splice(index, 1, suggestion[0]);
+  checkResult.forEach(({ pos, len, s: [suggestion] }: {pos: number, len: number, s: string}) => {
+    fixedText.push(text.slice(i, pos));
+    fixedText.push(suggestion);
+    i = pos + len;
   });
-  let fixedText = '';
-  words.forEach((word, index) => {
-    if (index === 0) {
-      fixedText += `${word}`;
-      return;
-    }
-    if (isCapitalized(word)) {
-      fixedText += `. ${word}`;
-      return;
-    }
-    fixedText += ` ${word}`;
-  });
-  return fixedText;
+  fixedText.push(text.slice(i));
+  return fixedText.join('');
 };
 
 export default async (text: string) => {
@@ -47,6 +36,7 @@ export default async (text: string) => {
   return promise
     .then((checkResult: checkResultSchema) => fixTypos(text, checkResult))
     .catch((err: Error) => {
+      // eslint-disable-next-line no-console
       console.log(err);
       throw (err);
     });

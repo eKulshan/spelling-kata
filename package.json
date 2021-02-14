@@ -17,10 +17,8 @@
   },
   "homepage": "https://github.com/eKulshan/spelling-kata#readme",
   "dependencies": {
-    "@types/lodash": "^4.14.168",
     "fastify": "^3.11.0",
     "fastify-multipart": "^4.0.0",
-    "lodash": "^4.17.20",
     "pino-pretty": "^4.5.0",
     "yandex-speller": "^4.1.0"
   },
